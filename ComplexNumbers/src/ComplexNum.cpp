@@ -27,6 +27,18 @@ double ComplexNum::getImag() {
     return (this -> Imag);
 }
 
+ComplexNum ComplexNum::conjugation(){
+    ComplexNum conjugation;
+    conjugation.setReal(Real);
+    conjugation.setImag(Imag*(-1));
+    return conjugation;
+}
+
+double ComplexNum::modulus(){
+    double modulus = sqrt(((Real * Real) + (Imag * Imag)));
+    return modulus;
+}
+
 ComplexNum ComplexNum::operator+ (const ComplexNum &complexObject) {
     ComplexNum result;
     result.setReal(Real + complexObject.Real);
@@ -43,7 +55,7 @@ ComplexNum ComplexNum::operator- (const ComplexNum &complexObject) {
 
 bool operator==(const ComplexNum &complexObject1, const ComplexNum &complexObject2) {
 
-    if(std::abs((complexObject1.Real - complexObject2.Real) < MIN_THRESHOLD) &&
+    if((std::abs(complexObject1.Real - complexObject2.Real) < MIN_THRESHOLD) &&
         (std::abs(complexObject1.Imag - complexObject2.Imag) < MIN_THRESHOLD)){
         return true;
     }else{
@@ -61,7 +73,7 @@ ComplexNum ComplexNum::operator*(const ComplexNum &complexObject) {
 ComplexNum ComplexNum::operator/(const ComplexNum &complexObject) {
     ComplexNum result;
     if(complexObject.Imag == 0 && complexObject.Real == 0){
-        throw std::invalid_argument("zero division");
+        throw std::invalid_argument("Division by zero");
     }else {
 
         result.setReal((Real * complexObject.Real + Imag * complexObject.Imag) /
@@ -101,13 +113,18 @@ std::ostream &operator<<(std::ostream &ost, const ComplexNum &complexObject) {
     return ost;
 }
 
-std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
+std::istream &operator>>(std::istream &is, ComplexNum &complexObject) {
+
+    std::stringstream ist;
+    std::string temporary;
+    is >> temporary;
+    ist << temporary;
 
     double real, Imag;
     char op, i, brackets, temp;
 
     if(ist.peek() != '('){
-        throw std::invalid_argument("unknown argument1");
+        throw std::invalid_argument("unknown argument (missing opening bracket)");
     }
     ist >> brackets ;
     if(ist.peek() == 'i'){ /* (-i)  (i) type */
@@ -116,9 +133,9 @@ std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
             ist >> temp;
             complexObject.Real = 0;
             complexObject.Imag = 1;
-            return ist;
+            return is;
         }else{
-            throw std::invalid_argument("unknown argument2");
+            throw std::invalid_argument("unknown argument 1");
         }
 
     }else if(ist.peek() == '-'){
@@ -129,9 +146,9 @@ std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
                 ist >> temp;
                 complexObject.Real = 0;
                 complexObject.Imag = -1;
-                return ist;
+                return is;
             }else{
-                throw std::invalid_argument("unknown argument3");
+                throw std::invalid_argument("unknown argument 2");
             }
         }else{
             ist.putback(i);
@@ -143,7 +160,7 @@ std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
             ist >> temp;
             complexObject.Real = real;
             complexObject.Imag = 0;
-            return ist;
+            return is;
         }
         if(ist.peek() == 'i'){      /* type of (xi) */
             ist >> i;
@@ -151,10 +168,10 @@ std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
                 ist >> temp;
                 complexObject.Real = 0;
                 complexObject.Imag = real;
-                return ist;
+                return is;
             }
         }
-        throw std::invalid_argument("unknown argument4");
+        throw std::invalid_argument("unknown argument 3");
     }
     ist >> op;
     if(ist.peek() == 'i') { /* type of (x+i) or (x-i)  */
@@ -167,19 +184,19 @@ std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
             }else if(op == '+'){
                 complexObject.Imag = 1;
             }
-            return ist;
+            return is;
         } else {
-            throw std::invalid_argument("unknown argument5");
+            throw std::invalid_argument("unknown argument 4");
 
         }
     }
     ist >> Imag;
     if(ist.peek() != 'i'){
-        throw std::invalid_argument("unknown argument6");
+        throw std::invalid_argument("unknown argument (missing i)");
     }
     ist >> i;
     if(ist.peek() != ')'){
-        throw std::invalid_argument("unknown argument7");
+        throw std::invalid_argument("unknown argument (missing closing bracket)");
     }
     ist >> temp;
 
@@ -192,5 +209,6 @@ std::istream &operator>>(std::istream &ist, ComplexNum &complexObject) {
         complexObject.Imag = Imag;
     }
 
-    return ist;
+    return is;
 }
+

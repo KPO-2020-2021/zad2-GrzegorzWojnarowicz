@@ -5,31 +5,30 @@
 TEST(testSubtract, test1)
 {
     ComplexNum c1(1,1);
-    ComplexNum c2(2,3);
-    EXPECT_EQ (c1 - c2, ComplexNum(-1,-2));
-
+    ComplexNum c2(3,4);
+    EXPECT_EQ (c1 - c2, ComplexNum(-2,-3));
 }
 
 TEST(testAdd, test2)
 {
     ComplexNum c1(1,1);
-    ComplexNum c2(2,3);
-    EXPECT_EQ (c1 + c2, ComplexNum(3,4));
+    ComplexNum c2(3,4);
+    EXPECT_EQ (c1 + c2, ComplexNum(4,5));
 }
 
-TEST(testCon, test3)
+TEST(testComplex, test3)
 {
     ComplexNum c1(1,1);
     EXPECT_EQ (c1, ComplexNum(1,1));
 }
 
-TEST(testEmptyCon, test4)
+TEST(testEmptyComplex, test4)
 {
     ComplexNum c1;
     EXPECT_EQ (c1, ComplexNum(0,0));
 }
 
-TEST(testMultiplicationByConstans, test5)
+TEST(testMultiplicationByConst, test5)
 {
     ComplexNum c1(10,10);
     ComplexNum result;
@@ -44,7 +43,7 @@ TEST(testMultiplicationByComplexNum, test6)
     EXPECT_EQ (c1 * c2, ComplexNum(10,30));
 }
 
-TEST(testDivisionByConstans, test7)
+TEST(testDivisionByConst, test7)
 {
     ComplexNum c1(10,10);
     ComplexNum result;
@@ -92,23 +91,24 @@ TEST(testGetingComplexNum, test11)
     ist << "(4+4.67i)";
     ist >> c1;
     EXPECT_EQ (c1, ComplexNum(4,4.67));
+    ist = std::stringstream();
 
     ist << "(0-4i)";
     ist >> c1;
     EXPECT_EQ (c1, ComplexNum(0,-4));
-
+    ist = std::stringstream();
+    
     ist << "(420.12345+0i)";
     ist >> c1;
     EXPECT_EQ (c1, ComplexNum(420.12345,0));
+    ist = std::stringstream();
 
-//    ist << "(42 + 4i)";
-//    ist >> c1;
-//    EXPECT_EQ(c1, ComplexNum(42,4));
 
     ist = std::stringstream();
     ist << "(420+0.i)";
     ist >> c1;
     EXPECT_EQ(c1, ComplexNum(420,0));
+    ist = std::stringstream();
 }
 
 TEST(testErrorThrows, test12)
@@ -142,7 +142,7 @@ TEST(testErrorThrows, test12)
 
 }
 
-TEST (Test, showInformationAboutComplexNum) {
+TEST (testShowInformationAboutComplexNum, test13) {
     ComplexNum z1(2, 5);
     ComplexNum z2(0, -3);
     ComplexNum z3(-5, 0);
@@ -180,7 +180,7 @@ TEST (Test, showInformationAboutComplexNum) {
     ASSERT_EQ("(10-7i)", os.str());
 }
 
-TEST (Test, getComplexFromCin) {
+TEST (testGetComplexFromCin, test14) {
     ComplexNum z1;
     std::stringstream is;
 
@@ -188,29 +188,37 @@ TEST (Test, getComplexFromCin) {
     is >> z1;
 
     ASSERT_EQ(z1, ComplexNum(51, 55.2));
+    is = std::stringstream();
 
     is << "(10-5i)";
     is >> z1;
 
     ASSERT_EQ(z1, ComplexNum(10, -5));
+    is = std::stringstream();
+
 
     is << "(-3-1i)";
     is >> z1;
 
     ASSERT_EQ(z1, ComplexNum(-3, -1));
+    is = std::stringstream();
+
 
     is << "(0-1i)";
     is >> z1;
 
     ASSERT_EQ(z1, ComplexNum(0, -1));
+    is = std::stringstream();
+
 
     is << "(1.5+0i)";
     is >> z1;
 
     ASSERT_EQ(z1, ComplexNum(1.5, 0));
+    is = std::stringstream();
 }
 
-TEST (Test, shorterVersionComplex) {
+TEST (testShorterVersionComplex, test15) {
     ComplexNum z1;
     std::stringstream is;
 
@@ -218,6 +226,8 @@ TEST (Test, shorterVersionComplex) {
     is >> z1;
     ASSERT_EQ(z1, ComplexNum(0, 1));
     z1 = ComplexNum();
+    is = std::stringstream();
+
 
     is << "(-i)";
     is >> z1;
@@ -250,7 +260,7 @@ TEST (Test, shorterVersionComplex) {
     z1 = ComplexNum();
 }
 
-TEST (Test, unfamiliarSyntaxErrorComplex) {
+TEST (testUnfamiliarSyntaxErrorComplex, test16) {
     ComplexNum z1;
     std::stringstream is;
 
@@ -277,13 +287,29 @@ TEST (Test, unfamiliarSyntaxErrorComplex) {
     is << "(a+6i)";
     EXPECT_THROW(is >> z1, std::exception);
     is = std::stringstream();
-
 }
 
-// TEST (Test, equalityCompareComplex) {
-//     ComplexNum z1 = ComplexNum (2,5);
-//     ComplexNum z2 = (2.00111,5.004234);
+TEST (testEqualityCompareComplex, test17) {
+    ComplexNum z1 = ComplexNum(2,5);
+    ComplexNum z2 = ComplexNum(2.000111,5.0004234);
 
     
-//     ASSERT_EQ(z1, z2);
-// }
+    ASSERT_EQ(z1, z2);
+}
+
+
+TEST (testConjugation, test18) {
+    ComplexNum z1 = ComplexNum(2,5);
+    ComplexNum z2 = z1.conjugation();
+
+    
+    ASSERT_EQ(z2, ComplexNum(2,-5));
+}
+
+TEST (testModulus, test19) {
+    ComplexNum z1 = ComplexNum(3,4);
+    double modulus = z1.modulus();
+
+    
+    ASSERT_EQ(modulus, 5);
+}

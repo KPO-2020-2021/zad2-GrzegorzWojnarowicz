@@ -11,7 +11,6 @@ ComplexExp::ComplexExp(ComplexNum Com1, ComplexNum Com2, char op) {
     this -> Com1 = Com1;
     this -> Com2 = Com2;
     this -> op = op;
-    calculateResult();
 }
 
 void ComplexExp::setCom1(ComplexNum C) {
@@ -26,12 +25,9 @@ void ComplexExp::setOp(char op) {
     this -> op = op;
 }
 
-void ComplexExp::setResult(ComplexNum C) {
-    this -> result = C;
-}
 
-bool operator==(const ComplexExp &ComExp1, const ComplexExp &ComExp2) {
-    if (ComExp1.Com1 == ComExp2.Com1 && ComExp1.Com2 == ComExp2.Com2 && ComExp1.op == ComExp2.op){
+bool operator==(const ComplexExp ComExp1, const ComplexExp ComExp2) {
+    if ((ComExp1.Com1 == ComExp2.Com1) && (ComExp1.Com2 == ComExp2.Com2) && (ComExp1.op == ComExp2.op)){
         return true;
     }else{
         return false;
@@ -41,24 +37,46 @@ bool operator==(const ComplexExp &ComExp1, const ComplexExp &ComExp2) {
 
 std::istream &operator>>(std::istream &ist, ComplexExp &ComExp) {
 
-    char tmp;
+    
+    try
+    {
+        ist >> ComExp.Com1;
+    }
+    catch(const std::exception& e)
+    {
+        ist >> ComExp.op;
+        ist >> ComExp.Com2;
+        std::cerr << e.what() << '\n';
+        return ist;
+    }
+    
+    
+    try
+    {
+        ist >> ComExp.op;
+    }
+    catch(const std::exception& e)
+    {
+        ist >> ComExp.Com2;
+        std::cerr << e.what() << '\n';
+        return ist;
+    }
 
-    ist >> ComExp.Com1;
-    if (ist.fail()){
-        throw std::invalid_argument("invalid argument");
+    try
+    {
+        ist >> ComExp.Com2;
     }
-    tmp = ist.peek();
-    if (tmp != '+' && tmp != '-' && tmp != '/' && tmp != '*'){
-        throw std::invalid_argument("invalid argument");
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        return ist;
     }
-    ist >> ComExp.op;
-    if (ist.fail()){
-        throw std::invalid_argument("invalid argument");
+    
+    
+    if (ComExp.op != '+' && ComExp.op != '-' && ComExp.op != '/' && ComExp.op != '*'){
+        throw std::invalid_argument("invalid argument in operator of Complex Expression");
     }
-    ist >> ComExp.Com2;
-    if (ist.fail()){
-        throw std::invalid_argument("invalid argument");
-    }
+   
     return ist;
 }
 
@@ -68,7 +86,9 @@ std::ostream &operator<<(std::ostream &ost, const ComplexExp &comExp) {
     if(ost.fail()){
         throw std::system_error();
     }
+    ost << " ";
     ost << comExp.op;
+    ost << " ";
     if(ost.fail()){
         throw std::system_error();
     }
@@ -79,7 +99,7 @@ std::ostream &operator<<(std::ostream &ost, const ComplexExp &comExp) {
     return ost;
 }
 
-void ComplexExp::calculateResult() {
+ComplexNum ComplexExp::calculateResult() {
 
     if (this -> op == '+'){
         this -> result = (this ->Com1) + (this -> Com2);
@@ -88,12 +108,17 @@ void ComplexExp::calculateResult() {
     }else if (this -> op == '*'){
         this -> result = (this -> Com1) * (this -> Com2);
     } else if (this -> op == '/'){
-        this -> result = (this -> Com1) / (this -> Com2);
+        if ((this -> Com2) == ComplexNum(0,0))
+        {
+            throw std::invalid_argument("Division zero");
+        }else{
+            this -> result = (this -> Com1) / (this -> Com2);
+        }
+        
+        
     }else{
-        throw std::invalid_argument("unknown operator");
+        throw std::invalid_argument("Unknown operator");
     }
-}
-
-ComplexNum ComplexExp::getResult() {
     return this -> result;
 }
+
