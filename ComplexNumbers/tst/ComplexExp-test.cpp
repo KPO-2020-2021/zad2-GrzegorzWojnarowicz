@@ -96,6 +96,3 @@ TEST(testCalculateWrongOper, testExp10)
 
 
 
-// double arg(LZespolona z); // wyswietlanie głównego argumentu liczby zespolonej; konieczny atan2
-// LZespolona operator += (LZespolona &Arg1, LZespolona const &Arg2); // + testy (takie same, jak dla +)
-// LZespolona operator /= (LZespolona &Arg1, LZespolona const &Arg2); // + testy (takie same, jak dla /)

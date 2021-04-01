@@ -313,3 +313,40 @@ TEST (testModulus, test19) {
     
     ASSERT_EQ(modulus, 5);
 }
+
+TEST (testGetRadians, test20) {
+    ComplexNum z1 = ComplexNum(2,0);
+    ComplexNum z2 = ComplexNum(0,1);
+    ComplexNum z3 = ComplexNum(2,2);
+    double radians = z1.arg();
+    ASSERT_EQ(radians, 0);
+
+    radians = z2.arg();
+    ASSERT_EQ(radians, M_PI/2);
+
+    radians = z3.arg();
+    ASSERT_EQ(radians, M_PI/4);
+}
+
+TEST (testAddEqual, test21) {
+    ComplexNum z1 = ComplexNum(3,4);
+    ComplexNum z2 = ComplexNum(1,1);
+    z1 += z2;
+
+    ASSERT_EQ(z1, ComplexNum(4,5));   
+}
+
+TEST (testDivideEqual, test22) {
+    ComplexNum z1 = ComplexNum(4,6);
+    ComplexNum z2 = ComplexNum(1,-5);
+    z1 /= z2;
+
+    ASSERT_EQ(z1, ComplexNum(-1,1));   
+}
+
+TEST (testDivideByZeroEqual, test23) {
+    ComplexNum z1 = ComplexNum(4,6);
+    ComplexNum z2 = ComplexNum(0,0);
+
+    EXPECT_THROW(z1/=z2, std::exception);   
+}

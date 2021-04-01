@@ -85,6 +85,16 @@ ComplexNum ComplexNum::operator/(const ComplexNum &complexObject) {
     return result;
 }
 
+ComplexNum ComplexNum::operator+= (ComplexNum const &complexObject){
+    *this = *this+complexObject;
+    return *this;
+}
+
+ComplexNum ComplexNum::operator/= (ComplexNum const &complexObject){
+    *this = *this/complexObject;
+    return *this;
+}
+
 std::ostream &operator<<(std::ostream &ost, const ComplexNum &complexObject) {
 
     if(complexObject.Real == 0){
@@ -212,3 +222,7 @@ std::istream &operator>>(std::istream &is, ComplexNum &complexObject) {
     return is;
 }
 
+double ComplexNum::arg(){
+    double radian = atan2(Imag, Real);
+    return radian;
+}
